@@ -33,29 +33,39 @@ Graphite data model
     carpy -+
            +-> test_app -+
                          +-> my_server -+
-                                        +-> get_user -+
-                                                      +-> ok       -> [meam, upper, count]
-                                                      +-> error    -> [mean, upper, count]
-                                                      +-> apdex    -> [mean]
-                                                      +-> children -+
-                                                                    +-> get_user_data -+
-                                                                                       +-> ok
-                                                                                       +-> error
-                                                                                       
+                         |              +-> get_user -+
+                         |              |             +-> [ok]
+                         |              |             +-> [error]
+                         |              |             +-> [apdex]
+                         |              |             +-> children -+
+                         |              |                           +-> get_user_data -+
+                         |              |                                              +-> [ok]
+                         |              |                                              +-> [error]
+                         |              |                                              
                          +-> my_server2 +
                                         +-> get_user -+
-                                                      +-> ok       -> [mean, upper, count]
-                                                      +-> error    -> [mean, upper, count]
-                                                      +-> apdex    -> [mean]
-                                                      +-> children -+
-                                                                    +-> get_user_data -+
-                                                                                       +-> ok
-                                                                                       +-> error
+                                        |             +-> [ok]
+                                        |             +-> [error]
+                                        |             +-> [apdex]
+                                        |             +-> children -+
+                                        |                           +-> get_user_data -+
+                                        |                                              +-> [ok]
+                                        |                                              +-> [error]
                                         +-> set_user -+
-                                                      +-> ok       -> [mean, upper, count]
-                                                      +-> error    -> [mean, upper, count]
-                                                      +-> apdex    -> [mean]
+                                                      +-> [ok]
+                                                      +-> [error]
+                                                      +-> [apdex]
                                                       +-> children -+
                                                                     +-> set_user_data -+
-                                                                                       +-> ok
-                                                                                       +-> error
+                                                                                       +-> [ok]
+                                                                                       +-> [error]
+
+    [ok/error] -+
+                +-> mean
+                +-> median
+                +-> upper
+                +-> upper_95
+                +-> lower
+                +-> count
+          
+          
