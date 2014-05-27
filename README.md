@@ -1,7 +1,7 @@
 carpy
 =====
 
-Make your application fluent
+Make your application swim like a fish in the water
 
 Collect application metrics in real time with statsd and graphite
 
