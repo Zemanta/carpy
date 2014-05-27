@@ -34,28 +34,28 @@ Graphite data model
            +-> test_app -+
                          +-> my_server -+
                                         +-> get_user -+
-                                                      +-> ok       -> [mean, upper, count]
+                                                      +-> ok       -> [meam, upper, count]
                                                       +-> error    -> [mean, upper, count]
+                                                      +-> apdex    -> [mean]
                                                       +-> children -+
                                                                     +-> get_user_data -+
                                                                                        +-> ok
                                                                                        +-> error
-                                                                                       +-> children
                                                                                        
                          +-> my_server2 +
                                         +-> get_user -+
                                                       +-> ok       -> [mean, upper, count]
                                                       +-> error    -> [mean, upper, count]
+                                                      +-> apdex    -> [mean]
                                                       +-> children -+
                                                                     +-> get_user_data -+
                                                                                        +-> ok
                                                                                        +-> error
-                                                                                       +-> children
                                         +-> set_user -+
                                                       +-> ok       -> [mean, upper, count]
                                                       +-> error    -> [mean, upper, count]
+                                                      +-> apdex    -> [mean]
                                                       +-> children -+
                                                                     +-> set_user_data -+
                                                                                        +-> ok
                                                                                        +-> error
-                                                                                       +-> children
