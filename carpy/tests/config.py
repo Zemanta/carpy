@@ -17,6 +17,7 @@ class ConfigTest(TestCase):
 	def test_config_from_class(self):
 		class Base(object):
 			TEST_KEY = 'foo'
+
 		class Test(Base):
 			SECRET_KEY = 'devkey'
 
