@@ -1,3 +1,6 @@
+__all__ = ['wrapper', 'config']
+
+from . import wrapper
 from .config import Config
 
 config = Config()

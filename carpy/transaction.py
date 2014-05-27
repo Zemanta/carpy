@@ -9,7 +9,7 @@ transactions_cache = weakref.WeakValueDictionary()
 
 
 class Transaction(object):
-	def __init__(self, parent=None):
+	def __init__(self, parent=None, name=None):
 		self.app_name = carpy.config['APP_NAME']
 
 		self.start_time = 0.0
@@ -32,7 +32,7 @@ class Transaction(object):
 
 		return self
 
-	def __exit__(self):
+	def __exit__(self, *args, **kwargs):
 		self.duration = time.time() - self.start_time
 
 
