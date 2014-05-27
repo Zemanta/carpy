@@ -57,28 +57,23 @@ class TranscationTest(TestCase):
 		self.assertEqual(carpy.transaction.get_thread_id(), expected_thread_id)
 
 	def test_get_greenlet_id(self):
-		# obj = object()
-		# greenlet_mock.getcurrent.return_value = obj()
-		# greenlet_mock.parent = None
-		return
-
 		class FakeObject:
-			parent = None
+			parent = True
 
-		self.greenlet_obj = FakeObject()
+		greenlet_obj = FakeObject()
 
 		class FakeGreenlet(object):
 			@staticmethod
 			def getcurrent():
-				return self.greenlet_obj
+				return greenlet_obj
 
-		self.original_greenlet = sys.modules.get('greenlet')
+		original_greenlet = sys.modules.get('greenlet')
 		sys.modules['greenlet'] = FakeGreenlet
 
-		self.assertIs(carpy.transaction.get_thread_id(), id(self.greenlet_obj))
+		self.assertEqual(carpy.transaction.get_thread_id(), id(greenlet_obj))
 
-		if self.original_greenlet:
-			sys.modules['greenlet'] = self.original_greenlet
+		if original_greenlet:
+			sys.modules['greenlet'] = original_greenlet
 		else:
 			del sys.modules['greenlet']
 

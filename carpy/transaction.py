@@ -43,7 +43,6 @@ def get_thread_id():
 	greenlet = sys.modules.get('greenlet')
 	if greenlet:
 		current_greenlet = greenlet.getcurrent()
-		print("bafdgfgfg#")
 		if current_greenlet is not None and current_greenlet.parent:
 			return id(current_greenlet)
 
