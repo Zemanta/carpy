@@ -34,6 +34,21 @@ class WrapperTest(TestCase):
 	@mock.patch('carpy.config')
 	@mock.patch('carpy.transaction.Transaction.__exit__')
 	@mock.patch('carpy.transaction.Transaction.__enter__')
+	def test_transaction_wrapper(self, mock_trans_enter, mock_trans_exit, config):
+		carpy.wrapper.transaction_trace_wrap(sys.modules[__name__], 'empty_handler_function')
+
+		self.assertFalse(mock_trans_exit.called)
+		self.assertFalse(mock_trans_enter.called)
+
+		empty_handler_function()
+
+		self.assertEqual(mock_trans_exit.call_count, 1)
+		self.assertTrue(mock_trans_enter.call_count, 1)
+
+
+	@mock.patch('carpy.config')
+	@mock.patch('carpy.transaction.Transaction.__exit__')
+	@mock.patch('carpy.transaction.Transaction.__enter__')
 	@mock.patch('carpy.wrapper.get_transaction', return_value=True)
 	def test_function_decorator(self, mock_get_trans, mock_trans_enter, mock_trans_exit, config):
 		@carpy.wrapper.function_trace
