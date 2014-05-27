@@ -23,8 +23,9 @@ class TranscationTest(TestCase):
 		time_start = time.time()
 		time_mock.time.return_value = time_start
 
-		transaction = carpy.transaction.Transaction()
+		transaction = carpy.transaction.Transaction(name='Test')
 		self.assertEqual(transaction.app_name, config_mock['APP_NAME'])
+		self.assertEqual(transaction.name, 'Test')
 		self.assertEqual(transaction.start_time, 0.0)
 		self.assertEqual(transaction.duration, 0.0)
 

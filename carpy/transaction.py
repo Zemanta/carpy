@@ -1,3 +1,4 @@
+import socket
 import sys
 import threading
 import time
@@ -9,18 +10,18 @@ transactions_cache = weakref.WeakValueDictionary()
 
 
 class Transaction(object):
-	def __init__(self, parent=None, name=None):
+	def __init__(self, name=None, parent=None):
 		self.app_name = carpy.config['APP_NAME']
 
 		self.start_time = 0.0
 		self.duration = 0.0
 
+		self.name = name
 		self.parent = parent
 
-		self.children = []
+		self.is_error = False
 
-	def add_child(self, transaction):
-		self.children.append(transaction)
+		self.children = []
 
 	def __enter__(self):
 		self.start_time = time.time()
@@ -34,6 +35,26 @@ class Transaction(object):
 
 	def __exit__(self, *args, **kwargs):
 		self.duration = time.time() - self.start_time
+
+	def add_child(self, transaction):
+		if not transaction.parent:
+			transaction.parent = self
+		self.children.append(transaction)
+
+	def error(self):
+		self.is_error = True
+
+	def get_metrics_string(self):
+		prefix = 'carpy.{app_name}.{host_name}.{name}.{type}'.format(
+			app_name=self.app_name.replace('.', '_'),
+			host_name=socket.gethostname().replace('.', '_'),
+			name=self.name.replace('.', '_'),
+			type='err' if self.is_error else 'ok'
+		)
+
+		result = prefix
+
+		return result
 
 
 def get_thread_id():
