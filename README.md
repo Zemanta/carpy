@@ -34,14 +34,14 @@ Graphite data model
            +-> test_app -+
                          +-> my_server -+
                          |              +-> get_user -+
-                         |              |             +-> [ok]
-                         |              |             +-> [error]
-                         |              |             +-> [apdex]
-                         |              |             +-> children -+
-                         |              |                           +-> get_user_data -+
-                         |              |                                              +-> [ok]
-                         |              |                                              +-> [error]
-                         |              |                                              
+                         |                            +-> [ok]
+                         |                            +-> [error]
+                         |                            +-> [apdex]
+                         |                            +-> children -+
+                         |                                           +-> get_user_data -+
+                         |                                                              +-> [ok]
+                         |                                                              +-> [error]
+                         |
                          +-> my_server2 +
                                         +-> get_user -+
                                         |             +-> [ok]
