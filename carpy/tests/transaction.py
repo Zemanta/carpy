@@ -74,18 +74,20 @@ class TranscationTest(TestCase):
 
 	@mock.patch.dict('carpy.config', {'APP_NAME': 'Test App'}, clear=True)
 	@mock.patch('carpy.transaction.socket')
-	def test_get_metric_string(self, socket_mock):
+	def test_get_stat_name(self, socket_mock):
 		socket_mock.gethostname.return_value = 'test.host.name'
 
 		t1 = carpy.transaction.Transaction(name='test.name').__enter__()
-		t2 = carpy.transaction.Transaction(name='test.name', parent=t1).__enter__()
-		self.assertEqual(t1.get_metric_str(), 'carpy.Test App.test_host_name.test_name.ok')
-		self.assertEqual(t2.get_metric_str(), 'carpy.Test App.test_host_name.test_name.child.ok')
+		self.assertEqual(t1.get_stat_name(), 'carpy.Test App.test_host_name.test_name.ok')
+
+		t2 = carpy.transaction.Transaction(name='test.name2', parent=t1).__enter__()
+		t3 = carpy.transaction.Transaction(name='test.name3', parent=t2).__enter__()
+		self.assertEqual(t3.get_stat_name(), 'carpy.Test App.test_host_name.test_name.child.test_name2.child.test_name3.ok')
 
 		t1.error()
 		t2.error()
-		self.assertEqual(t1.get_metric_str(), 'carpy.Test App.test_host_name.test_name.err')
-		self.assertEqual(t2.get_metric_str(), 'carpy.Test App.test_host_name.test_name.child.err')
+		self.assertEqual(t1.get_stat_name(), 'carpy.Test App.test_host_name.test_name.err')
+		self.assertEqual(t2.get_stat_name(), 'carpy.Test App.test_host_name.test_name.child.test_name2.err')
 
 	def test_get_thread_id(self):
 		expected_thread_id = threading.current_thread().ident

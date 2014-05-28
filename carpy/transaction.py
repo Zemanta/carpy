@@ -54,23 +54,28 @@ class Transaction(object):
 	def sanitize_name(self, name):
 		return name.replace('.', '_') if name else ''
 
-	def get_metric_str(self, prefix=None):
-		parts = [
-			'carpy',
-			self.sanitize_name(self.app_name),
+	def get_stat_name(self):
+		# These are parts of the stat name in reverse order so that we can
+		# append them instead of insert them. Premature optimization?
+		parts = []
+
+		transaction = self
+		while transaction:
+			parts.append(self.sanitize_name(transaction.name))
+			transaction = transaction.parent
+			if transaction:
+				parts.append('child')
+
+		parts.extend([
 			self.sanitize_name(socket.gethostname()),
-			self.sanitize_name(self.name),
-			'err' if self.is_error else 'ok'
-		]
+			self.sanitize_name(self.app_name),
+			'carpy',
+		])
 
-		if self.parent is not None:
-			parts.insert(4, 'child')
+		parts.reverse()
+		parts.append('err' if self.is_error else 'ok')
 
-		prefix = '.'.join(parts)
-
-		result = prefix
-
-		return result
+		return '.'.join(parts)
 
 
 def get_thread_id():
