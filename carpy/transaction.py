@@ -10,6 +10,14 @@ transactions_cache = weakref.WeakValueDictionary()
 
 
 class Transaction(object):
+	''' Transaction collects stats during its execution. This stats are sent to
+	statsd.
+
+	Transaction is a context manager and is expected to be invoked using the
+	with statement although it is also possible to manually call __enter__ and
+	__exit__ methods.
+	'''
+
 	def __init__(self, name=None, parent=None):
 		self.app_name = carpy.config['APP_NAME']
 
@@ -37,11 +45,23 @@ class Transaction(object):
 		self.duration = time.time() - self.start_time
 
 	def add_child(self, transaction):
+		''' Adds a child transaction to the transaction.
+
+		:param transaction:
+			Transaction which is to be added as a child to the current
+			transaction.
+		'''
 		if not transaction.parent:
 			transaction.parent = self
 		self.children.append(transaction)
 
 	def get_all_transactions(self):
+		''' Generator that yields the tree of all the parent and children
+		transactions in no particular order.
+
+		:returns:
+			Yields the transaction.
+		'''
 		for child in self.children:
 			for trans in child.get_all_transactions():
 				yield trans
@@ -49,12 +69,28 @@ class Transaction(object):
 		yield self
 
 	def error(self):
+		''' Tells the transaction that an error occurred in the code while the
+		transation was active.
+		'''
 		self.is_error = True
 
 	def sanitize_name(self, name):
+		''' Sanitizes the component of the stat's name so that it can be
+		sent correctly to statsd.
+
+		:param name:
+			Part of the stat's name.
+		'''
 		return name.replace('.', '_') if name else ''
 
 	def get_stat_name(self):
+		''' Returns the name of the stat which can be used when sending
+		stat to statsd.
+
+		:returns:
+			Name of the stat.
+		'''
+
 		# These are parts of the stat name in reverse order so that we can
 		# append them instead of insert them. Premature optimization?
 		parts = []
@@ -92,7 +128,7 @@ def get_thread_id():
 
 
 def get_transaction():
-	''' Returns current transation from cache.
+	''' Returns current transaction from cache.
 	'''
 
 	return transactions_cache.get(get_thread_id())
