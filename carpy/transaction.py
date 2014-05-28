@@ -53,7 +53,7 @@ class Transaction(object):
 
 		return self
 
-	def __exit__(self, exc_type, exc_value, tb):
+	def __exit__(self, exc_type=None, exc_value=None, tb=None):
 		self.duration = time.time() - self.start_time
 
 		if exc_type: # if exception happens, exc_type is set to exception type
