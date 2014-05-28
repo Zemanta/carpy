@@ -9,11 +9,8 @@ def transaction_trace(func, func_name=None):
 	@wraps(func)
 	def wrapper(*args, **kwargs):
 		new_func_name = func_name or func.__name__
-		with Transaction(name=new_func_name) as t:
-			try:
-				return func(*args, **kwargs)
-			except Exception:
-				t.error()
+		with Transaction(name=new_func_name):
+			return func(*args, **kwargs)
 	return wrapper
 
 
@@ -22,15 +19,12 @@ def function_trace(func, func_name=None):
 	def wrapper(*args, **kwargs):
 		current_transaction = get_transaction()
 		if not current_transaction:
-			return
+			return func(*args, **kwargs)
 
 		new_func_name = func_name or func.__name__
-		with Transaction(name=new_func_name, parent=current_transaction) as t:
-			try:
-				return func(*args, **kwargs)
-			except Exception:
-				t.error()
-
+		with Transaction(name=new_func_name, parent=current_transaction):
+			return func(*args, **kwargs)
+		raise
 	return wrapper
 
 

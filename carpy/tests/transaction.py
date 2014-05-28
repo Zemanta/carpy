@@ -34,7 +34,7 @@ class TranscationTest(TestCase):
 		self.assertEqual(transaction.start_time, time_start)
 		self.assertIs(carpy.transaction.transactions_cache[carpy.transaction.get_thread_id()], transaction)
 
-		time_end = time.time() + 5
+		time_end = time_start + 5
 		time_mock.time.return_value = time_end
 
 		transaction.__exit__()
@@ -139,7 +139,7 @@ class TranscationTest(TestCase):
 		duration_ms = 5000
 
 		with carpy.transaction.Transaction(name='Test'):
-			time_end = time.time() + duration
+			time_end = time_start + duration
 			time_mock.time.return_value = time_end
 
 		self.assertEqual(statsd_timing_mock.call_count, 1)

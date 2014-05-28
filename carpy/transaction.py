@@ -22,6 +22,14 @@ class Transaction(object):
 	__exit__ methods.
 	'''
 
+	app_name = None
+	start_time = None
+	duration = None
+	name = None
+	parent = None
+	is_error = None
+	children = None
+
 	def __init__(self, name, parent=None):
 		self.app_name = carpy.config['APP_NAME']
 
@@ -45,8 +53,11 @@ class Transaction(object):
 
 		return self
 
-	def __exit__(self, *args, **kwargs):
+	def __exit__(self, exc_type, exc_value, tb):
 		self.duration = time.time() - self.start_time
+
+		if exc_type: # if exception happens, exc_type is set to exception type
+			self.error()
 
 		self.send_stats()
 
