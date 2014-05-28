@@ -41,15 +41,12 @@ class Transaction(object):
 			transaction.parent = self
 		self.children.append(transaction)
 
-	def get_all_transactions(self, transaction=None):
-		if transaction is None:
-			transaction = self
-
-		for child in transaction.children:
-			for trans in self.get_all_transactions(child):
+	def get_all_transactions(self):
+		for child in self.children:
+			for trans in child.get_all_transactions():
 				yield trans
 
-		yield transaction
+		yield self
 
 	def error(self):
 		self.is_error = True
