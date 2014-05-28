@@ -6,25 +6,30 @@ Make your application swim like a fish in the water
 Collect application metrics in real time with statsd and graphite
 
 
-Api proposal
-------------
+Roadmap
+-------
 
-    import carpy.config
-    import carpy.wrapper.transaction
-  
-  
-    carpy.config.set('statsd_url', 'localhost:1234')
-  
-  
-    @carpy.wrapper.transaction
-    def get_user(request):
-      return HttpResponse(get_user_data())
-  
-    
-    @carpy.wrapper.function
-    def get_user_data():
-      pass
+**v0.0.1**
 
+- Transaction and function timing module
+- Manual function decorators and wrappers
+- StatsD timing and error reporting
+- Web UI proof of concept with timing charts, request rates, error rates
+ 
+**v0.1**
+
+- WSGI wrapper
+- Some module wrappers (urllib, MySQL, pycassa, memcached, ...)
+- Optional request logging (with python logging module)
+- Usable web UI
+- Open Source
+
+**v0.2 (backend rewrite)**
+
+- Cassandra backend for metrics
+- Request logging to server
+- Alering
+- Web UI 2.0
 
 
 Graphite data model
