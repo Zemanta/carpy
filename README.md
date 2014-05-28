@@ -22,6 +22,7 @@ Roadmap
 - Some module wrappers (urllib, MySQL, pycassa, memcached, ...)
 - Optional request logging (with python logging module)
 - Usable web UI
+- Docs and readme
 - Open Source
 
 **v0.2 (backend rewrite)**
