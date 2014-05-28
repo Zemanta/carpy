@@ -41,16 +41,35 @@ class Transaction(object):
 			transaction.parent = self
 		self.children.append(transaction)
 
+	def get_all_transactions(self, transaction=None):
+		if transaction is None:
+			transaction = self
+
+		for child in transaction.children:
+			for trans in self.get_all_transactions(child):
+				yield trans
+
+		yield transaction
+
 	def error(self):
 		self.is_error = True
 
-	def get_metrics_string(self):
-		prefix = 'carpy.{app_name}.{host_name}.{name}.{type}'.format(
-			app_name=self.app_name.replace('.', '_'),
-			host_name=socket.gethostname().replace('.', '_'),
-			name=self.name.replace('.', '_'),
-			type='err' if self.is_error else 'ok'
-		)
+	def sanitize_name(self, name):
+		return name.replace('.', '_') if name else ''
+
+	def get_metric_str(self, prefix=None):
+		parts = [
+			'carpy',
+			self.sanitize_name(self.app_name),
+			self.sanitize_name(socket.gethostname()),
+			self.sanitize_name(self.name),
+			'err' if self.is_error else 'ok'
+		]
+
+		if self.parent is not None:
+			parts.insert(4, 'child')
+
+		prefix = '.'.join(parts)
 
 		result = prefix
 
